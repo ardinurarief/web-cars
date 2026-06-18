@@ -479,7 +479,7 @@
                         <!-- Bagian Gambar & Lencana -->
                         <div class="relative overflow-hidden h-48 sm:h-52 bg-slate-900">
                             <!-- Fallback handal ke Unsplash premium jika URL lokal tidak terisi -->
-                            <img :src="car.image" :alt="car.name"
+                            <img :src="car.image" :alt="car.name" loading="lazy"
                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                                 onerror="
                     this.src =
