@@ -1,0 +1,1544 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>BYD CarDealer - Era Baru Kendaraan Listrik Premium</title>
+
+    <!-- Tailwind CSS untuk Desain Visual Kelas Dunia -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ["Montserrat", "sans-serif"],
+                        subjudul: ["Raleway", "sans-serif"],
+                        deskripsi: ["Quicksand", "sans-serif"],
+                    },
+                    colors: {
+                        brand: {
+                            0: "#ffffff",
+                            50: "#e0f2fe",
+                            100: "#bae6fd",
+                            500: "#0284c7" /* Biru Elektrik khas BYD */,
+                            600: "#0369a1",
+                            700: "#075985",
+                            900: "#0c4a6e",
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- Google Fonts: Poppins & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Averia+Sans+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Bebas+Neue&family=Dancing+Script:wght@400..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=SN+Pro:ital,wght@0,200..900;1,200..900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Alpine.js untuk Interaktivitas Dinamis dan Reaktif -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Lucide Icons untuk Ikon yang Tajam & Modern -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .font-heading {
+            font-family: "Poppins", sans-serif;
+        }
+
+        /* Custom scrollbar untuk performa visual premium */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0369a1;
+        }
+
+        /* Custom scroll horizontal behavior untuk filter */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 overflow-x-hidden min-h-screen" x-data="carDealerApp()">
+    <!-- SISTEM NOTIFIKASI TOAST (Responsif & pas di layar kecil) -->
+    <div class="fixed bottom-4 right-4 left-4 sm:left-auto sm:right-5 z-50 flex flex-col gap-2 max-w-sm">
+        <template x-for="toast in toasts" :key="toast.id">
+            <div
+                class="bg-slate-900 text-white px-4 py-3 shadow-2xl border-l-4 border-brand-500 flex items-center justify-between gap-3 transform transition-all duration-300">
+                <div class="flex items-center gap-2.5">
+                    <i data-lucide="info" class="w-5 h-5 text-brand-500 flex-shrink-0"></i>
+                    <span class="text-xs font-semibold" x-text="toast.message"></span>
+                </div>
+                <button @click="removeToast(toast.id)" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </template>
+    </div>
+
+    <!-- HEADER / NAVIGATION BAR -->
+    <header
+        class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-slate-100 transition-all duration-300">
+        <div class="container mx-auto px-4 lg:px-8 py-3 md:py-4 flex justify-between items-center">
+            <!-- Logo Brand -->
+            <a href="#" class="flex items-center gap-2">
+                <!-- Menjaga pemanggilan logo asli tetap aman -->
+                <img src="https://arista-group.co.id/wp-content/uploads/2023/05/Arista-Logo.png" width="85"
+                    alt="BYD Logo" class="object-contain" onerror="
+              this.src =
+                'https://upload.wikimedia.org/wikipedia/commons/d/dd/BYD_auto_logo.svg';
+              this.style.height = '24px';
+            " />
+            </a>
+
+            <!-- Navigasi Desktop -->
+            <nav class="hidden lg:flex items-center gap-8 font-medium text-slate-600">
+                <a href="#beranda" class="hover:text-brand-500 transition">Beranda</a>
+                <a href="#katalog" class="hover:text-brand-500 transition">Katalog EV</a>
+                <a href="#keunggulan" class="hover:text-brand-500 transition">Teknologi Blade</a>
+                <a href="#testimoni" class="hover:text-brand-500 transition">Testimoni</a>
+                <!-- <a href="#blog" class="hover:text-brand-500 transition">Info & Berita</a> -->
+                <a href="#hubungi" class="hover:text-brand-500 transition">
+                    Konsultasi & Test Drive
+                </a>
+            </nav>
+
+            <!-- Aksi Pengguna Desktop (Favorit & Hubungi Kami) -->
+            <div class="hidden lg:flex items-center gap-4">
+                <!-- Tombol Favorit -->
+                <button @click="isWishlistOpen = true"
+                    class="relative p-2.5 text-slate-600 hover:text-brand-500 hover:bg-slate-50 rounded-full transition">
+                    <i data-lucide="heart" class="w-6 h-6"></i>
+                    <span
+                        class="absolute -top-1 -right-1 bg-brand-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white"
+                        x-text="favorites.length">0</span>
+                </button>
+            </div>
+
+            <!-- Tombol Mobile Menu & Wishlist (Besar dan ramah sentuhan) -->
+            <div class="lg:hidden flex items-center gap-2">
+                <button @click="isWishlistOpen = true"
+                    class="relative p-3 text-slate-600 hover:text-brand-500 active:scale-95 transition-all">
+                    <i data-lucide="heart" class="w-6 h-6"></i>
+                    <span
+                        class="absolute top-1.5 right-1.5 bg-brand-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center"
+                        x-text="favorites.length">0</span>
+                </button>
+                <button @click="isMobileMenuOpen = !isMobileMenuOpen"
+                    class="p-3 text-slate-800 hover:text-brand-500 active:scale-95 transition-all" aria-label="Menu">
+                    <i :data-lucide="isMobileMenuOpen ? 'x' : 'menu'" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Drawer Mobile -->
+        <div x-cloak x-show="isMobileMenuOpen" x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0"
+            x-transition:leave-end="opacity-0 -translate-y-4"
+            class="lg:hidden bg-white border-b border-slate-100 px-6 py-5 space-y-4 absolute w-full left-0 shadow-xl z-50">
+            <a href="#beranda" @click="isMobileMenuOpen = false" class="block font-semibold text-brand-500 py-1">Beranda
+                Utama</a>
+            <a href="#katalog" @click="isMobileMenuOpen = false"
+                class="block text-slate-600 hover:text-brand-500 py-1">Katalog Mobil BYD</a>
+            <a href="#keunggulan" @click="isMobileMenuOpen = false"
+                class="block text-slate-600 hover:text-brand-500 py-1">Kelebihan Teknologi</a>
+            <a href="#testimoni" @click="isMobileMenuOpen = false"
+                class="block text-slate-600 hover:text-brand-500 py-1">Testimoni Klien</a>
+            <a href="#blog" @click="isMobileMenuOpen = false"
+                class="block text-slate-600 hover:text-brand-500 py-1">Artikel Otomotif</a>
+            <a href="#hubungi" @click="isMobileMenuOpen = false"
+                class="block text-slate-600 hover:text-brand-500 py-1">Konsultasi Gratis</a>
+        </div>
+    </header>
+
+    <!-- SECTION 1: HERO / BERANDA (CENTERED & RESPONSIVE) -->
+    <section id="beranda" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background Image -->
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0 transition-transform duration-[20s] hover:scale-105"
+            style="
+          background-image: url(&quot;https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=1920&quot;);
+        "></div>
+
+        <!-- Overlay Gradient Gelap (Dari Bawah ke Atas agar Teks Terbaca) -->
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-slate-900/30 z-10"></div>
+
+        <!-- Pattern Overlay (Tekstur Halus) -->
+        <div class="absolute inset-0 opacity-10 z-10" style="
+          background-image: radial-gradient(#ffffff 1px, transparent 1px);
+          background-size: 30px 30px;
+        "></div>
+
+        <!-- Konten Utama (Tengah) -->
+        <!-- Container Utama -->
+        <div
+            class="container mx-auto px-4 relative z-20 py-12 lg:py-0 flex flex-col items-center justify-center min-h-[80vh]">
+            <!-- Wrapper Konten dengan space-y yang rapat -->
+            <div class="max-w-3xl w-full space-y-5 animate-fade-in-up text-center">
+                <!-- Badge (Sudah center karena inline-flex + mx-auto) -->
+                <div
+                    class="inline-flex items-center gap-2 bg-brand-500/90 backdrop-blur-sm border border-brand-400/30 px-5 py-2 rounded-full text-white font-bold text-xs tracking-wider uppercase shadow-lg shadow-brand-500/20 mx-auto">
+                    <i data-lucide="badge-check" class="w-4 h-4"></i>
+                    Dealer BYD Resmi & Terpercaya
+                </div>
+
+                <h1
+                    class="font-heading text-slate-200 text-5xl sm:text-5xl lg:text-7xl leading-relaxed mx-auto font-light text-center px-4 sm:px-0">
+                    Era Baru Kendaraan
+                </h1>
+
+                <!-- Deskripsi (PENTING: Hapus semua padding kiri/kanan & pastikan text-center) -->
+                <p
+                    class="font-deskripsi text-slate-200 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto font-light text-center px-4 sm:px-0">
+                    Rasakan performa tanpa batas dengan teknologi
+                    <strong>Blade Battery</strong> teraman di dunia. Jangkauan lebih
+                    jauh, pengisian lebih cepat, dan kenyamanan maksimal untuk keluarga
+                    Anda.
+                </p>
+
+                <!-- Tombol Aksi (Centered) -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-4 justify-center items-center w-full px-4 sm:px-0">
+                    <a href="#katalog"
+                        class="group bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white px-8 py-3.5  font-semibold transition-all duration-300 flex items-center justify-center gap-3 hover:border-white/60 w-full sm:w-auto max-w-xs sm:max-w-none">
+                        Jelajahi Katalog EV
+                    </a>
+
+                    <a href="#hubungi"
+                        class="group bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white px-8 py-3.5 font-semibold transition-all duration-300 flex items-center justify-center gap-3 hover:border-white/60 w-full sm:w-auto max-w-xs sm:max-w-none">
+                        Jadwalkan Test Drive
+                    </a>
+                </div>
+
+                <!-- Stats (Centered Grid) -->
+                <div class="grid grid-cols-3 gap-2 sm:gap-4 pt-6 border-t border-white/10 mt-6 max-w-lg mx-auto w-full">
+                    <div class="text-center">
+                        <p class="text-xl sm:text-2xl font-bold text-white">
+                            530<span class="text-xs sm:text-sm font-normal text-brand-400">km</span>
+                        </p>
+                        <p class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wide">
+                            Jarak Tempuh
+                        </p>
+                    </div>
+                    <div class="text-center border-x border-white/10">
+                        <p class="text-xl sm:text-2xl font-bold text-white">
+                            30<span class="text-xs sm:text-sm font-normal text-brand-400">mnt</span>
+                        </p>
+                        <p class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wide">
+                            Fast Charging
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xl sm:text-2xl font-bold text-white">
+                            8<span class="text-xs sm:text-sm font-normal text-brand-400">thn</span>
+                        </p>
+                        <p class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wide">
+                            Garansi Baterai
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: PROMOSI BANNER (CARD STYLE) -->
+    <section class="py-16 lg:py-24 bg-slate-50 overflow-hidden">
+        <div class="container mx-auto px-4 lg:px-8">
+
+            <!-- CARD UTAMA -->
+            <div
+                class="bg-white  shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-slate-100 p-6 sm:p-8 lg:p-12 relative overflow-hidden">
+
+                <!-- Elemen Dekorasi Halus di Dalam Card -->
+                <div
+                    class="absolute top-0 right-0 w-64 h-64 bg-brand-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none">
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center relative z-10">
+
+                    <!-- KOLOM KIRI: Konten Teks -->
+                    <div class="lg:col-span-5 order-2 lg:order-1 flex flex-col justify-center">
+                        <div class="space-y-6 max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
+
+                            <!-- Label Kategori -->
+                            <div
+                                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 text-slate-600 text-[11px] font-semibold uppercase tracking-wide mx-auto lg:mx-0">
+                                <i data-lucide="users" class="w-3.5 h-3.5 text-brand-500"></i>
+                                Keluarga EV Pertama
+                            </div>
+
+                            <!-- Judul -->
+                            <h2 class="font-heading text-3xl sm:text-4xl lg:text-5xl text-slate-900 leading-[1.15]">
+                                BYD M6: MPV Listrik <br class="hidden sm:block" />
+                                <span class="text-brand-500">Masa Depan Keluarga</span>
+                            </h2>
+
+                            <!-- Deskripsi -->
+                            <p class="text-slate-500 text-base sm:text-lg leading-relaxed font-deskripsi">
+                                Kombinasi sempurna antara kepraktisan mobil keluarga dan teknologi listrik murni.
+                                Nikmati kabin premium 7-Seater dengan sistem keselamatan ADAS terlengkap.
+                            </p>
+
+                            <!-- Feature List (Grid Interaktif) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                                <div
+                                    class="flex items-start gap-3 p-3 shadow-md border border-transparent hover:border-slate-100 hover:bg-slate-50 transition-all duration-300 group">
+                                    <div
+                                        class="bg-brand-0 p-2 rounded-lg border border-brand-200 text-brand-500 flex-shrink-0">
+                                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                                    </div>
+                                    <div class="text-left">
+                                        <h4 class="font-semibold text-slate-900 text-sm leading-snug">Garansi Baterai 8
+                                            Tahun</h4>
+                                        <p class="text-xs text-slate-400 mt-0.5 leading-snug font-deskripsi">
+                                            Perlindungan penuh Blade Battery.</p>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="flex items-start gap-3 p-3 shadow-md border border-transparent hover:border-slate-100 hover:bg-slate-50 transition-all duration-300 group">
+                                    <div
+                                        class="bg-brand-0 p-2 rounded-lg border border-brand-200 text-brand-500 flex-shrink-0">
+                                        <i data-lucide="zap" class="w-5 h-5"></i>
+                                    </div>
+                                    <div class="text-left">
+                                        <h4 class="font-semibold text-slate-900 text-sm leading-snug">Ultra Fast
+                                            Charging</h4>
+                                        <p class="text-xs text-slate-400 mt-0.5 leading-snug font-deskripsi">30% ke 80%
+                                            hanya dalam 30 menit.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CTA Buttons -->
+                            <div class="pt-4 flex flex-col sm:flex-row gap-3 w-full">
+                                <a href="#hubungi"
+                                    @click="consultCarOfInterest = 'BYD M6 Superior 7-Seater'; addToast('Unit BYD M6 dipilih')"
+                                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-slate-200 hover:border-brand-500 hover:text-brand-500 text-slate-600 bg-white px-6 py-3.5 font-semibold text-sm transition-all duration-300 active:scale-[0.98]">
+                                    Dapatkan Penawaran Khusus
+                                    <i data-lucide="arrow-right"
+                                        class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                                </a>
+
+                                <a href="#katalog"
+                                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-slate-200 hover:border-brand-500 hover:text-brand-500 text-slate-600 bg-white px-6 py-3.5 font-semibold text-sm transition-all duration-300 active:scale-[0.98]">
+                                    Lihat Spesifikasi Lengkap
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KOLOM KANAN: Visual Mobil -->
+                    <div
+                        class="lg:col-span-7 order-1 lg:order-2 relative flex justify-center lg:justify-end min-h-[300px] lg:min-h-[400px]">
+                        <!-- Background Lingkaran Halus untuk Gambar -->
+                        <div
+                            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-slate-50/80 rounded-full -z-10 hidden lg:block">
+                        </div>
+
+                        <img src="https://imgcdn.oto.com/large/gallery/exterior/177/3039/byd-m6-front-angle-low-view-779791.jpg?tr=w-510,h-340"
+                            alt="BYD M6 Promo"
+                            class="relative w-full max-w-md lg:max-w-lg transform -rotate-2 hover:rotate-0 transition-all duration-700 drop-shadow-2xl"
+                            onerror="this.src='https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80&w=600'">
+
+                        <!-- Floating Stat Card -->
+                        <div
+                            class="absolute bottom-0 right-0 lg:right-8 bg-white p-4  shadow-xl border border-slate-100 hidden sm:flex items-center gap-3 animate-fade-in-up">
+                            <div class="bg-emerald-100 p-2 rounded-lg text-emerald-600">
+                                <i data-lucide="battery-charging" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wide">Jarak Tempuh
+                                </p>
+                                <p class="text-lg font-normal text-slate-900 leading-none">530 km<span
+                                        class="text-xs font-normal text-slate-400">/charge</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- END CARD UTAMA -->
+
+        </div>
+    </section>
+
+    <!-- SECTION 3: KATALOG INTERAKTIF UTAMA (DENGAN ALPINE.JS) -->
+    <section id="katalog" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-heading text-slate-900 mt-3">
+                        Katalog Lengkap Armada Listrik BYD
+                    </h2>
+                </div>
+            </div>
+
+            <!-- CONTROLS DAN FILTERS -->
+            <div class="bg-slate-50 shadow-sm p-4 sm:p-6 mb-10 border border-slate-100">
+                <h3 class="font-subjudul text-slate-900 text-base md:text-lg mb-4 flex items-center gap-2">
+                    <i data-lucide="search" class="w-5 h-5"></i> Cari
+                    Model BYD Impian Anda
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                    <!-- Tipe Bodi -->
+                    <div class="space-y-1">
+                        <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tipe Bodi</label>
+                        <select x-model="searchBodyType" @change="searchCars()"
+                            class="w-full p-3 bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer">
+                            <option value="all">Semua Tipe Bodi</option>
+                            <option value="MPV">MPV (Mobil Keluarga)</option>
+                            <option value="SUV">SUV Premium</option>
+                            <option value="Sedan">Sedan Premium / Sport</option>
+                            <option value="Hatchback">Hatchback Kompak</option>
+                        </select>
+                    </div>
+
+                    <!-- Kapasitas Tempat Duduk -->
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Kapasitas Kursi</label>
+                        <select x-model="searchSeats" @change="searchCars()"
+                            class="w-full p-3 bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer">
+                            <option value="all">Semua Kapasitas</option>
+                            <option value="4-5">4 - 5 Kursi</option>
+                            <option value="6">6 Kursi (Captain Seat)</option>
+                            <option value="7">7 Kursi (Family)</option>
+                        </select>
+                    </div>
+
+                    <!-- Batas Harga OTR -->
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Batas Harga
+                            Maksimal</label>
+                        <select x-model="searchPriceLimit" @change="searchCars()"
+                            class="w-full p-3 bg-white border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer">
+                            <option value="all">Tanpa Batas</option>
+                            <option value="450000000">Di bawah Rp 450 Juta</option>
+                            <option value="600000000">Di bawah Rp 600 Juta</option>
+                            <option value="800000000">Di bawah Rp 800 Juta</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-slate-200/60 flex flex-wrap justify-between items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <button @click="currentFilterView = 'semua'; searchCars()"
+                            :class="currentFilterView === 'semua' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+                            class="px-4 py-2 text-xs font-semibold transition">
+                            Semua Unit EV
+                        </button>
+                        <button @click="currentFilterView = 'rekomendasi'; searchCars()"
+                            :class="currentFilterView === 'rekomendasi' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'"
+                            class="px-4 py-2 text-xs font-semibold transition">
+                            Paling Laris
+                        </button>
+                    </div>
+                    <button @click="resetFilters()"
+                        class="text-xs font-semibold text-brand-500 border border-brand-500 hover:text-brand-600 flex items-center gap-1 py-2 px-3 hover:bg-sky-50 transition">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- GRID DYNAMIC BYD CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <template x-for="car in filteredCars" :key="car.id">
+                    <div
+                        class="bg-white shadow-md hover:shadow-2xl border border-slate-100 overflow-hidden transition-all duration-300 transform hover:-translate-y-2 group flex flex-col h-full">
+                        <!-- Bagian Gambar & Lencana -->
+                        <div class="relative overflow-hidden h-48 sm:h-52 bg-slate-900">
+                            <!-- Fallback handal ke Unsplash premium jika URL lokal tidak terisi -->
+                            <img :src="car.image" :alt="car.name"
+                                class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                onerror="
+                    this.src =
+                      'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=600'
+                  " />
+
+                            <!-- Status Badge -->
+                            <span
+                                class="absolute top-4 left-4 bg-emerald-500 text-white text-[10px] uppercase font-black tracking-widest px-3 py-1.5 rounded-full shadow"
+                                x-text="car.status"></span>
+
+                            <!-- Tombol Tambah ke Wishlist / Favorit -->
+                            <button @click="toggleFavorite(car.id)"
+                                class="absolute top-4 right-4 bg-white/95 hover:bg-white text-slate-800 hover:text-brand-500 p-2.5 rounded-full shadow-md transition">
+                                <i data-lucide="heart"
+                                    :class="isFavorite(car.id) ? 'fill-brand-500 text-brand-500' : 'text-slate-600'"
+                                    class="w-5 h-5 transition"></i>
+                            </button>
+                        </div>
+
+                        <!-- Info Detail Mobil -->
+                        <div class="p-5 sm:p-6 flex flex-col flex-grow">
+                            <div class="flex justify-between items-start gap-2">
+                                <div class="min-w-0">
+                                    <span class="text-xs text-brand-500 font-semibold tracking-wider uppercase"
+                                        x-text="car.brand"></span>
+                                    <h3 class="text-base sm:text-lg font-semibold text-slate-900 mt-1 hover:text-brand-500 transition cursor-pointer font-heading leading-snug truncate"
+                                        @click="openCarDetail(car)" :title="car.name" x-text="car.name"></h3>
+                                </div>
+                                <span
+                                    class=" border border-slate-300 bg-slate-100 text-slate-800 font-semibold text-xs px-2.5 py-1  flex-shrink-0"
+                                    x-text="car.year"></span>
+                            </div>
+
+                            <!-- Rating Stars -->
+                            <div class="flex items-center gap-1 mt-2 text-amber-500 text-sm">
+                                <template x-for="i in 5">
+                                    <i data-lucide="star"
+                                        :class="i <= car.rating ? 'fill-amber-500 text-amber-500' : 'text-slate-200'"
+                                        class="w-3.5 h-3.5"></i>
+                                </template>
+                                <span class="text-xs text-slate-400 font-bold ml-1" x-text="car.rating + '.0'"></span>
+                            </div>
+
+                            <!-- Baris Spesifikasi Mobil -->
+                            <div
+                                class="grid grid-cols-3 gap-2 py-3.5 my-4 border-y border-slate-100 text-center text-slate-500 text-xs">
+                                <div class="space-y-1">
+                                    <i data-lucide="gauge" class="w-4 h-4 text-brand-500 mx-auto"></i>
+                                    <p class="font-deskripsi text-slate-700 truncate" x-text="car.mileage"></p>
+                                </div>
+                                <div class="space-y-1 border-x border-slate-100 px-1">
+                                    <i data-lucide="zap" class="w-4 h-4 text-brand-500 mx-auto"></i>
+                                    <p class="font-deskripsi text-slate-700 truncate" x-text="car.transmission"></p>
+                                </div>
+                                <div class="space-y-1">
+                                    <i data-lucide="battery-charging" class="w-4 h-4 text-brand-500 mx-auto"></i>
+                                    <p class="font-deskripsi text-slate-700 truncate" x-text="car.batteryCapacity"></p>
+                                </div>
+                            </div>
+
+                            <!-- Harga & Tombol CTA -->
+                            <div class="flex items-center justify-between mt-auto pt-2 gap-2">
+                                <div class="min-w-0">
+                                    <p class="text-[10px] text-slate-400 font-deskripsi uppercase tracking-wide">
+                                        Harga OTR Mulai
+                                    </p>
+                                    <p class="text-sm sm:text-base font-black text-slate-900 truncate"
+                                        x-text="formatRupiah(car.price)"></p>
+                                </div>
+                                <button @click="openCarDetail(car)"
+                                    class="border border-brand-500 text-brand-500 hover:bg-brand-500 hover:text-white px-4 py-2.5 text-xs font-bold transition flex-shrink-0 active:scale-95 shadow">
+                                    Detail / Test Drive
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: TEKNOLOGI BYD (MODERN GLASS CARDS) -->
+    <section id="keunggulan" class="py-20 lg:py-28 bg-slate-950 text-white relative overflow-hidden">
+
+        <!-- Background Decor: Gradient Halus & Grid Pattern -->
+        <div
+            class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-900/20 via-slate-950 to-slate-950 pointer-events-none">
+        </div>
+        <div class="absolute inset-0 opacity-[0.03]"
+            style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 40px 40px;">
+        </div>
+
+        <div class="container mx-auto px-4 lg:px-8 relative z-10">
+
+            <!-- Header Section (Centered & Clean) -->
+            <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                <span
+                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-xs font-bold uppercase tracking-widest">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5"></i> Inovasi Terdepan
+                </span>
+                <h2 class="font-heading text-2xl sm:text-3xl lg:text-4xl text-white mt-3">
+                    Teknologi EV Tanpa Kompromi
+                </h2>
+
+                <p class="text-slate-400 text-base sm:text-lg font-deskripsi max-w-xl mx-auto">
+                    Standar baru ekosistem energi bersih global yang dirancang untuk keamanan, efisiensi, dan
+                    fleksibilitas keluarga Anda.
+                </p>
+            </div>
+
+            <!-- Bento Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+
+                <!-- Card 1: Blade Battery -->
+                <div
+                    class="group relative bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:bg-white/10 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between min-h-[280px]">
+                    <div>
+                        <div
+                            class="w-14 h-14 bg-brand-500/20 border border-white/20 rounded-2xl flex items-center justify-center text-brand-400 mb-6">
+                            <i data-lucide="shield-alert" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-subjudul text-white mb-3">Keamanan Blade Battery</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed font-deskripsi">
+                            Lolos uji ekstrim paku (*nail penetration test*) tanpa asap maupun api. Baterai LFP paling
+                            aman di dunia untuk perlindungan maksimal keluarga Anda.
+                        </p>
+                    </div>
+                    <!-- Decorative Line -->
+                    <div
+                        class="mt-6 pt-6 border-t border-white/5 flex items-center gap-2 text-xs text-slate-500 font-mono uppercase tracking-wider">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Safety Certified
+                    </div>
+                </div>
+
+                <!-- Card 2: E-Platform 3.0 -->
+                <div
+                    class="group relative bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:bg-white/10 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between min-h-[280px]">
+                    <div>
+                        <div
+                            class="w-14 h-14 bg-brand-500/20 border border-white/20 rounded-2xl flex items-center justify-center text-brand-400 mb-6">
+                            <i data-lucide="activity" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-subjudul text-white mb-3">E-Platform 3.0 Ultra Efisien</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed font-deskripsi">
+                            Integrasi penggerak 8-in-1 pertama di dunia. Memaksimalkan efisiensi daya hingga 89% untuk
+                            jarak tempuh lebih jauh dengan konsumsi energi minimal.
+                        </p>
+                    </div>
+                    <div
+                        class="mt-6 pt-6 border-t border-white/5 flex items-center gap-2 text-xs text-slate-500 font-mono uppercase tracking-wider">
+                        <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span> 89% Efficiency
+                    </div>
+                </div>
+
+                <!-- Card 3: V2L -->
+                <div
+                    class="group relative bg-white/5 backdrop-blur-sm border border-white/10 p-8 hover:bg-white/10 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between min-h-[280px]">
+                    <div>
+                        <div
+                            class="w-14 h-14 bg-brand-500/20 border border-white/20 rounded-2xl flex items-center justify-center text-brand-400 mb-6">
+                            <i data-lucide="plug-zap" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-subjudul text-white mb-3">V2L (Vehicle-to-Load)</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed font-deskripsi">
+                            Ubah BYD Anda menjadi power bank raksasa berjalan. Alirkan daya listrik cadangan langsung ke
+                            peralatan rumah tangga, camping gear, atau perangkat elektronik.
+                        </p>
+                    </div>
+                    <div
+                        class="mt-6 pt-6 border-t border-white/5 flex items-center gap-2 text-xs text-slate-500 font-mono uppercase tracking-wider">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> 3.3kW Output
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: TESTIMONI CLIENTS (MODERN EDITORIAL STYLE) -->
+    <section id="testimoni" class="py-20 lg:py-28 bg-slate-50 relative overflow-hidden">
+
+        <!-- Decorative Background Elements -->
+        <div
+            class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-200 to-transparent opacity-50">
+        </div>
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-brand-100/50 rounded-full blur-3xl pointer-events-none">
+        </div>
+
+        <div class="container mx-auto px-4 lg:px-8 relative z-10">
+
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-heading text-slate-900 mt-3">
+                        Pengalaman Nyata <span class="text-brand-500">Pemilik BYD</span>
+                    </h2>
+                </div>
+            </div>
+
+
+            <!-- Testimonials Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+
+                <!-- Testimoni 1 -->
+                <div
+                    class="group bg-white p-8 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between min-h-[320px]">
+                    <div>
+                        <!-- Typographic Quote Mark -->
+                        <div class="text-6xl font-serif text-brand-100 leading-none mb-4 select-none">“</div>
+
+                        <!-- Badge Mobil Spesifik -->
+                        <div
+                            class="inline-block px-3 py-1 bg-slate-100 border border-slate-200 text-slate-600 text-[10px] font-bold uppercase tracking-wider mb-4">
+                            BYD M6 Superior
+                        </div>
+
+                        <p class="text-slate-700 text-base leading-relaxed font-deskripsi">
+                            Mengendarai BYD M6 sangat memuaskan keluarga. Kabinnya luas untuk anak-anak, akselerasi
+                            senyap, dan hemat biaya dibanding BBM. Benar-benar mobil keluarga masa depan.
+                        </p>
+                    </div>
+
+                    <!-- User Profile (Horizontal Layout for Mobile) -->
+                    <div class="mt-8 pt-6 border-t border-slate-50 flex items-center gap-4">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150"
+                                alt="Andika" class="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-sm">
+                            <div class="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-0.5 rounded-full">
+                                <i data-lucide="check" class="w-3 h-3"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Andika Wijaya</h4>
+                            <p class="text-xs text-slate-400 font-deskripsi">Pengusaha & Bapak Rumah Tangga</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimoni 2 -->
+                <div
+                    class="group bg-white p-8 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between min-h-[320px]">
+                    <div>
+                        <div class="text-6xl font-serif text-brand-100 leading-none mb-4 select-none">“</div>
+
+                        <div
+                            class="inline-block px-3 py-1 border border-slate-200 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider mb-4">
+                            BYD Seal Performance
+                        </div>
+
+                        <p class="text-slate-700 text-base leading-relaxed font-deskripsi">
+                            Monster jalanan! 0-100 kpj hanya 3.8 detik. Penampilannya elegan dan sistem Blade Battery
+                            memberikan rasa aman ekstra. Tidak ada penyesalan beralih ke EV.
+                        </p>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-slate-50 flex items-center gap-4">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
+                                alt="Sarah" class="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-sm">
+                            <div class="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-0.5 rounded-full">
+                                <i data-lucide="check" class="w-3 h-3"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Sarah Callista</h4>
+                            <p class="text-xs text-slate-400 font-deskripsi">Arsitek Premium</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimoni 3 -->
+                <div
+                    class="group bg-white p-8 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between min-h-[320px]">
+                    <div>
+                        <div class="text-6xl font-serif text-brand-100 leading-none mb-4 select-none">“</div>
+
+                        <div
+                            class="inline-block px-3 py-1 border border-slate-200 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider mb-4">
+                            Layanan Purnajual
+                        </div>
+
+                        <p class="text-slate-700 text-base leading-relaxed font-deskripsi">
+                            Pelayanan sangat cepat dan profesional. Dari leasing, instalasi charger rumah gratis, sampai
+                            asuransi semuanya dibantu. Dealer BYD terbaik yang pernah saya kunjungi.
+                        </p>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-slate-50 flex items-center gap-4">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150"
+                                alt="Roni" class="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-sm">
+                            <div class="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-0.5 rounded-full">
+                                <i data-lucide="check" class="w-3 h-3"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Roni Suhendra</h4>
+                            <p class="text-xs text-slate-400 font-deskripsi">Kolektor EV</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- SECTION 7: KONSULTASI / HUBUNGI SALES (MODERN SPLIT CARD) -->
+    <section id="hubungi" class="py-20 lg:py-28 bg-slate-50 relative overflow-hidden">
+
+        <!-- Background Decor -->
+        <div
+            class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-200 to-transparent opacity-50">
+        </div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-100/30 rounded-full blur-3xl pointer-events-none">
+        </div>
+
+        <div class="container mx-auto px-4 lg:px-8 relative z-10">
+
+            <!-- Header Section -->
+            <div class="text-center max-w-2xl mx-auto mb-12 space-y-4">
+                <h2 class="font-heading text-3xl sm:text-4xl lg:text-5xl text-slate-900 leading-tight">
+                    Mulai Perjalanan EV <br class="hidden sm:block" />
+                    <span class="text-brand-500">Bersama Kami</span>
+                </h2>
+                <p class="text-slate-500 text-base sm:text-lg font-deskripsi max-w-xl mx-auto">
+                    Tim sales profesional kami siap membantu Anda menemukan mobil listrik BYD yang sempurna. Respon
+                    cepat dalam 15 menit.
+                </p>
+            </div>
+
+            <!-- Main Card Container -->
+            <div
+                class="bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-slate-100 overflow-hidden flex flex-col lg:flex-row">
+
+                <!-- KOLOM KIRI: Info Kontak (Dark Theme) -->
+                <div
+                    class="lg:w-5/12 bg-slate-900 p-8 sm:p-10 lg:p-12 text-white flex flex-col justify-between relative overflow-hidden order-2 lg:order-1">
+                    <!-- Decorative Glow -->
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none">
+                    </div>
+
+                    <div class="relative z-10 space-y-8">
+                        <div>
+                            <h3 class="font-heading text-2xl mb-2">Showroom BYD</h3>
+                            <p class="text-slate-400 text-sm font-deskripsi">Kunjungi kami untuk pengalaman test drive
+                                langsung.</p>
+                        </div>
+
+                        <div class="space-y-6">
+                            <!-- Alamat -->
+                            <div class="flex items-start gap-4 group">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-brand-400 flex-shrink-0">
+                                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">Lokasi</p>
+                                    <p class="text-sm text-slate-200 leading-relaxed font-deskripsi">Jl. H. Mena No. 98, Hajimena,
+                                        Natar, Lampung Selatan</p>
+                                </div>
+                            </div>
+
+                            <!-- Telepon/WA -->
+                            <a href="https://wa.me/6281234567890" target="_blank"
+                                class="flex items-start gap-4 group hover:bg-white/5 p-3 -mx-3 rounded-xl transition-colors">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-brand-400 flex-shrink-0">
+                                    <i data-lucide="phone" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">WhatsApp /
+                                        Telp</p>
+                                    <p class="text-sm text-slate-200 font-deskripsi">+62 812-3456-7890</p>
+                                    <p class="text-[10px] text-emerald-400 mt-0.5">Hubungi Kami</p>
+                                </div>
+                            </a>
+
+                            <!-- Jam Operasional -->
+                            <div class="flex items-start gap-4 group">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-brand-400 flex-shrink-0">
+                                    <i data-lucide="clock" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">Jam Buka
+                                    </p>
+                                    <p class="text-sm text-slate-200 font-deskripsi">Senin - Minggu</p>
+                                    <p class="text-sm text-brand-400 font-bold">08:00 - 18:30 WIB</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media Links -->
+                    <div class="relative z-10 pt-8 mt-8 border-t border-white/10">
+                        <p class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-4">Ikuti Kami</p>
+                        <div class="flex gap-3">
+                            <a href="#"
+                                class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition-all active:scale-95">
+                               <i class="fa-brands fa-instagram"></i>
+                            </a>
+                            <a href="#"
+                                class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition-all active:scale-95">
+                                <i class="fa-brands fa-facebook-f"></i>
+                            </a>
+                            <a href="#"
+                                class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition-all active:scale-95">
+                                <i class="fa-brands fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KOLOM KANAN: Form Kontak (Light Theme) -->
+                <div class="lg:w-7/12 p-8 sm:p-10 lg:p-12 bg-white order-1 lg:order-2">
+                    <div class="mb-8">
+                        <h3 class="font-heading text-2xl text-slate-900 mb-2">Jadwalkan Test Drive</h3>
+                        <p class="text-slate-500 text-sm font-deskripsi">Isi formulir di bawah ini. Tim kami akan menghubungi Anda
+                            segera.</p>
+                    </div>
+
+                    <form @submit.prevent="submitConsultationForm()" class="space-y-5">
+                        <!-- Nama & WhatsApp Row -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div class="space-y-1.5">
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">Nama
+                                    Lengkap</label>
+                                <input type="text" x-model="consultName" required placeholder="Contoh: Budi Santoso"
+                                    class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 transition-all placeholder:text-slate-400" />
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">No.
+                                    WhatsApp</label>
+                                <input type="tel" x-model="consultPhone" required placeholder="0812xxxxxxxx"
+                                    class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 transition-all placeholder:text-slate-400" />
+                            </div>
+                        </div>
+
+                        <!-- Dropdown Mobil -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">Unit BYD
+                                Diminati</label>
+                            <div class="relative">
+                                <select x-model="consultCarOfInterest" required
+                                    class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 transition-all appearance-none cursor-pointer">
+                                    <option value="" disabled selected>Pilih model mobil...</option>
+                                    <template x-for="car in cars" :key="car.id">
+                                        <option :value="car.name" x-text="car.name"></option>
+                                    </template>
+                                </select>
+                                <!-- Custom Arrow Icon -->
+                                <div
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pesan Tambahan -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">Pesan
+                                (Opsional)</label>
+                            <textarea rows="4" x-model="consultMessage"
+                                placeholder="Tulis pertanyaan atau request jadwal..."
+                                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 transition-all resize-none placeholder:text-slate-400"></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit"
+                            class="group w-full bg-slate-900 text-white font-bold py-4 transition-all duration-300 shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2 active:scale-[0.98] mt-2 hover:bg-slate-700">
+                            <span>Kirim Permintaan Test Drive</span>
+                            <i data-lucide="send"
+                                class="w-4 h-4"></i>
+                        </button>
+
+                        <p class="text-center text-[10px] text-slate-400 mt-4">
+                            Data Anda aman & tidak akan dibagikan ke pihak ketiga.
+                        </p>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-slate-950 text-slate-400 pt-16 pb-8 border-t border-slate-900">
+        <div class="container mx-auto px-4 lg:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+            <!-- Info Brand -->
+            <div class="space-y-4">
+                <!-- Logo Brand -->
+            <a href="#" class="flex items-center gap-2">
+                <!-- Menjaga pemanggilan logo asli tetap aman -->
+                <img src="https://arista-group.co.id/wp-content/uploads/2023/05/Arista-Logo.png" width="85"
+                    alt="BYD Logo" class="object-contain" onerror="
+              this.src =
+                'https://upload.wikimedia.org/wikipedia/commons/d/dd/BYD_auto_logo.svg';
+              this.style.height = '24px';
+            " />
+            </a>
+                <p class="text-xs leading-relaxed text-slate-400 font-deskripsi">
+                    Penyedia kendaraan listrik premium BYD bergaransi resmi Blade
+                    Battery di Indonesia. Membawa masa depan mobilitas ramah lingkungan
+                    ke genggaman Anda hari ini.
+                </p>
+                <p class="text-xs font-semibold text-slate-500">
+                    © 2026 BYD Dealer. Hak Cipta Dilindungi Undang-Undang.
+                </p>
+            </div>
+
+            <!-- Tautan Navigasi Cepat -->
+            <div>
+                <h4 class="font-bold text-white text-sm mb-4 tracking-wider uppercase">
+                    Tautan Cepat
+                </h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li>
+                        <a href="#beranda" class="hover:text-brand-500 transition">Beranda Utama</a>
+                    </li>
+                    <li>
+                        <a href="#katalog" class="hover:text-brand-500 transition">Katalog EV</a>
+                    </li>
+                    <li>
+                        <a href="#keunggulan" class="hover:text-brand-500 transition">Teknologi Blade</a>
+                    </li>
+                    <li>
+                        <a href="#testimoni" class="hover:text-brand-500 transition">Testimoni Klien</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Layanan Kami -->
+            <div>
+                <h4 class="font-bold text-white text-sm mb-4 tracking-wider uppercase">
+                    Layanan Kami
+                </h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li>
+                        <a href="#" @click.prevent="addToast('Pemesanan test-drive silakan melalui form kontak.')"
+                            class="hover:text-brand-500 transition">Penjadwalan Test Drive</a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            @click.prevent="addToast('Pemasangan instalasi wall-box charger gratis di rumah Anda')"
+                            class="hover:text-brand-500 transition">Pemasangan Home Charger</a>
+                    </li>
+                    <li>
+                        <a href="#" @click.prevent="addToast('Kalkulator asuransi resmi BYD')"
+                            class="hover:text-brand-500 transition">Asuransi Mobil Listrik</a>
+                    </li>
+                    <li>
+                        <a href="#" @click.prevent="addToast('Layanan bengkel resmi baterai 24 jam')"
+                            class="hover:text-brand-500 transition">Bengkel Spesialis EV</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Berlangganan Newsletter -->
+            <div>
+                <h4 class="font-bold text-white text-sm mb-4 tracking-wider uppercase">
+                    Berlangganan Newsletter
+                </h4>
+                <p class="text-xs text-slate-400 mb-4 leading-relaxed font-light">
+                    Dapatkan pembaruan langsung terkait diskon promo musiman, update
+                    software OTA, dan model mobil BYD terbaru.
+                </p>
+                <form @submit.prevent="addToast('Terima kasih! Anda sukses terdaftar.')" class="flex gap-2">
+                    <input type="email" required placeholder="Email Anda"
+                        class="w-full bg-slate-900 border border-slate-800 p-3 text-xs text-white focus:outline-none focus:border-brand-500" />
+                    <button type="submit"
+                        class="bg-brand-500 hover:bg-brand-600 text-white p-3 transition flex-shrink-0 active:scale-95">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL DRAWER UNTUK MOBIL WISHLIST / FAVORIT -->
+    <div x-cloak x-show="isWishlistOpen" class="fixed inset-0 z-50 overflow-hidden" style="display: none">
+        <!-- Backdrop Transparan -->
+        <div x-show="isWishlistOpen" x-transition:enter="transition-opacity ease-out duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-in duration-200" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            @click="isWishlistOpen = false"></div>
+
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div x-show="isWishlistOpen" x-transition:enter="transform transition ease-out duration-300"
+                x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+                x-transition:leave="transform transition ease-in duration-200" x-transition:leave-start="translate-x-0"
+                x-transition:leave-end="translate-x-full" class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                    <div class="flex items-center gap-2 text-slate-900">
+                        <h3 class="text-lg font-bold font-heading">Mobil BYD Favorit</h3>
+                    </div>
+                    <button @click="isWishlistOpen = false" class="text-slate-500 hover:text-slate-800 p-2 rounded-lg">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <div class="flex-grow overflow-y-auto p-6 space-y-4">
+                    <!-- Jika tidak ada wishlist -->
+                    <template x-if="favorites.length === 0">
+                        <div class="text-center py-12 space-y-3">
+                            <div
+                                class="bg-slate-100 p-4 rounded-full w-14 h-14 flex items-center justify-center mx-auto text-slate-400">
+                                <i data-lucide="heart-off" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-700">Daftar Favorit Kosong</h4>
+                            <p class="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed font-deskripsi">
+                                Anda belum menambahkan unit BYD ke daftar favorit Anda.
+                            </p>
+                        </div>
+                    </template>
+
+                    <!-- List Favorit Aktif -->
+                    <template x-for="carId in favorites" :key="carId">
+                        <div
+                            class="flex gap-4 p-3 border border-slate-100 hover:shadow-md transition bg-white items-center">
+                            <div class="w-20 h-16 overflow-hidden bg-slate-100 flex-shrink-0">
+                                <img :src="getCarById(carId)?.image" :alt="getCarById(carId)?.name"
+                                    class="w-full h-full object-cover" onerror="
+                      this.src =
+                        'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=600'
+                    " />
+                            </div>
+                            <div class="flex-grow min-w-0">
+                                <h4 class="font-bold text-xs text-slate-900 truncate" x-text="getCarById(carId)?.name">
+                                </h4>
+                                <p class="text-[10px] text-brand-500 font-bold mt-0.5"
+                                    x-text="formatRupiah(getCarById(carId)?.price || 0)"></p>
+                            </div>
+                            <div class="flex gap-1 flex-shrink-0">
+                                <button @click="openCarDetail(getCarById(carId)); isWishlistOpen = false"
+                                    class="p-1.5 text-slate-600 hover:text-brand-500">
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                </button>
+                                <button @click="toggleFavorite(carId)" class="p-1.5 text-rose-600 hover:text-rose-800">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="p-6 border-t border-slate-100 bg-slate-50 flex gap-4">
+                    <button @click="favorites = []; addToast('Semua favorit dibersihkan')"
+                        class="w-1/2 border border-slate-300 text-slate-600 hover:bg-slate-100 py-3 font-bold text-xs transition">
+                        Bersihkan Semua
+                    </button>
+                    <button @click="isWishlistOpen = false"
+                        class="w-1/2 bg-brand-500 text-white hover:bg-brand-600 py-3 font-bold text-xs transition text-center">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL OVERLAY DETAIL MOBIL PREMIUM (Adaptif untuk layar handphone!) -->
+    <div x-cloak x-show="isDetailModalOpen"
+        class="fixed inset-0 z-50 overflow-y-auto flex items-end sm:items-center justify-center p-0 sm:p-4"
+        style="display: none">
+        <!-- Backdrop gelap -->
+        <div x-show="isDetailModalOpen" x-transition:enter="transition-opacity ease-out duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-in duration-200" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" class="fixed inset-0 bg-black/80 backdrop-blur-sm"
+            @click="isDetailModalOpen = false"></div>
+
+        <!-- Konten Detail Modal Mobil -->
+        <div x-show="isDetailModalOpen" x-transition:enter="transition-all ease-out duration-300 transform"
+            x-transition:enter-start="translate-y-full sm:translate-y-4 sm:opacity-0 sm:scale-95"
+            x-transition:enter-end="translate-y-0 sm:scale-100 sm:opacity-100"
+            x-transition:leave="transition-all ease-in duration-200 transform"
+            x-transition:leave-start="translate-y-0 sm:scale-100 sm:opacity-100"
+            x-transition:leave-end="translate-y-full sm:translate-y-4 sm:opacity-0 sm:scale-95"
+            class="bg-white overflow-hidden max-w-3xl w-full shadow-2xl relative z-10 max-h-[90vh] sm:max-h-[85vh] flex flex-col"
+            x-show="selectedCar">
+            <!-- Mobile Slide indicator -->
+            <div class="sm:hidden flex justify-center py-3 border-b border-slate-100 cursor-pointer"
+                @click="isDetailModalOpen = false">
+                <div class="w-12 h-1.5 bg-slate-200 rounded-full"></div>
+            </div>
+
+            <!-- Close Button -->
+            <button @click="isDetailModalOpen = false"
+                class="absolute top-4 right-4 bg-black/60 hover:bg-brand-500 text-white p-2.5 rounded-full z-20 transition shadow-lg">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Scrollable Content Container -->
+            <div class="overflow-y-auto flex-1">
+                <!-- Grid Visual & Spesifikasi -->
+                <div class="grid grid-cols-1 md:grid-cols-12">
+                    <!-- Sisi Gambar Mobil - Diatur khusus md:object-left agar moncong mobil tergeser ke kanan dan nampak utuh di desktop -->
+                    <div class="md:col-span-6 bg-slate-900 relative h-56 sm:h-72 md:h-full min-h-[220px]">
+                        <img :src="selectedCar?.image" :alt="selectedCar?.name"
+                            class="w-full h-full object-cover object-center md:object-left" onerror="
+                  this.src =
+                    'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=600'
+                " />
+                        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur text-white px-3 py-1.5 rounded-xl text-xs font-bold"
+                            x-text="'Tahun Rilis ' + selectedCar?.year"></div>
+                        <span
+                            class="absolute top-4 left-4 bg-emerald-500 text-white text-[10px] uppercase font-black tracking-widest px-3 py-1.5 rounded-full"
+                            x-text="selectedCar?.status"></span>
+                    </div>
+
+                    <!-- Sisi Konten Info -->
+                    <div class="md:col-span-6 p-6 sm:p-8 space-y-6">
+                        <div>
+                            <span class="text-xs text-brand-500 font-bold uppercase tracking-wider"
+                                x-text="selectedCar?.brand"></span>
+                            <h3 class="text-xl sm:text-2xl font-heading text-slate-900 mt-1" x-text="selectedCar?.name">
+                            </h3>
+                            <div class="flex items-center gap-1 mt-2 text-amber-500">
+                                <template x-for="i in 5">
+                                    <i data-lucide="star"
+                                        :class="i <= car.rating ? 'fill-amber-500 text-amber-500' : 'text-slate-200'"
+                                        class="w-3.5 h-3.5"></i>
+                                </template>
+                                <span class="text-xs text-slate-400 font-bold ml-1"
+                                    x-text="selectedCar?.rating + '.0 Rating'"></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">
+                                Harga On The Road Mulai
+                            </p>
+                            <p class="text-2xl sm:text-3xl font-extrabold mt-1"
+                                x-text="formatRupiah(selectedCar?.price || 0)"></p>
+                        </div>
+
+                        <!-- Grid Spek Teknis Lengkap -->
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-xs mb-3 uppercase tracking-wider">
+                                Spesifikasi Blade Battery & EV
+                            </h4>
+                            <div class="grid grid-cols-2 gap-3 text-xs">
+                                <div
+                                    class="bg-slate-50 p-3 border border-slate-100 flex items-center gap-2.5 shadow-md">
+                                    <i data-lucide="gauge" class="w-4 h-4 text-brand-500 flex-shrink-0"></i>
+                                    <div>
+                                        <p class="text-[9px] text-slate-400">Jarak Tempuh</p>
+                                        <p class="font-bold text-slate-800" x-text="selectedCar?.mileage"></p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-slate-50 p-3 border border-slate-100 flex items-center gap-2.5 shadow-md">
+                                    <i data-lucide="zap" class="w-4 h-4 text-brand-500 flex-shrink-0"></i>
+                                    <div>
+                                        <p class="text-[9px] text-slate-400">Transmisi</p>
+                                        <p class="font-bold text-slate-800" x-text="selectedCar?.transmission"></p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-slate-50 p-3 border border-slate-100 flex items-center gap-2.5 shadow-md">
+                                    <i data-lucide="battery-charging" class="w-4 h-4 text-brand-500 flex-shrink-0"></i>
+                                    <div>
+                                        <p class="text-[9px] text-slate-400">Kapasitas Baterai</p>
+                                        <p class="font-bold text-slate-800" x-text="selectedCar?.batteryCapacity"></p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-slate-50 p-3 border border-slate-100 flex items-center gap-2.5 shadow-md">
+                                    <i data-lucide="users" class="w-4 h-4 text-brand-500 flex-shrink-0"></i>
+                                    <div>
+                                        <p class="text-[9px] text-slate-400">Jumlah Seat</p>
+                                        <p class="font-bold text-slate-800" x-text="selectedCar?.seats + ' Kursi'"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Simulasi Booking -->
+                        <div class="border-t border-slate-100 pt-5 space-y-3">
+                            <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider">
+                                Tertarik Mencoba Unit Ini?
+                            </h4>
+                            <p class="text-slate-500 text-xs leading-relaxed font-deskripsi">
+                                Hubungi sales advisor kami secara otomatis melalui WhatsApp
+                                untuk meminta simulasi kredit atau booking jadwal test-drive.
+                            </p>
+                            <div class="flex gap-3">
+                                <a :href="'https://wa.me/6281234567890?text=Halo%20BYD%20Dealer,%20saya%20tertarik%20dengan%20unit%20' + encodeURIComponent(selectedCar?.name)"
+                                    target="_blank"
+                                    class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 text-xs transition shadow-lg text-center flex items-center justify-center gap-2 active:scale-95">
+                                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                                    Sales Unit Ini
+                                </a>
+                                <button @click="toggleFavorite(selectedCar?.id)"
+                                    :class="isFavorite(selectedCar?.id) ? 'bg-rose-50 text-brand-500 border-brand-200' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'"
+                                    class="px-4 border transition flex items-center justify-center active:scale-95">
+                                    <i data-lucide="heart" :class="isFavorite(selectedCar?.id) ? 'fill-brand-500' : ''"
+                                        class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIKA ALPINE JS & METODE UTAMA -->
+    <script>
+        function carDealerApp() {
+            return {
+                // State pencarian & filtering
+                searchBodyType: "all",
+                searchSeats: "all",
+                searchPriceLimit: "all",
+                currentFilterView: "semua",
+
+                // State data form konsultasi
+                consultName: "",
+                consultPhone: "",
+                consultCarOfInterest: "BYD M6 Superior 7-Seater",
+                consultMessage: "",
+
+                // Modal & favorites
+                isMobileMenuOpen: false,
+                isWishlistOpen: false,
+                isDetailModalOpen: false,
+                selectedCar: null,
+                favorites: [],
+                toasts: [],
+
+                // MASTER DATABASE INVENTARIS MOBIL EXCLUSIVELY BYD (Harga & Spek Resmi Indonesia 2026)
+                cars: [
+                    {
+                        id: 2,
+                        name: "BYD M6 EV",
+                        brand: "BYD",
+                        year: 2026,
+                        price: 383000000,
+                        bodyType: "MPV",
+                        transmission: "Otomatis",
+                        batteryCapacity: "71.8 kWh",
+                        mileage: "530 Km",
+                        image:
+                            "https://www.byd.com/material/byd-site/id/pricelist/m6-blue-fix-fixed.png",
+                        rating: 5,
+                        status: "Baru",
+                        drivetrain: "FWD",
+                        seats: 7,
+                    },
+                    {
+                        id: 4,
+                        name: "BYD SEALION 7",
+                        brand: "BYD",
+                        year: 2026,
+                        price: 629000000,
+                        bodyType: "SUV",
+                        transmission: "Otomatis",
+                        batteryCapacity: "82.5 kWh",
+                        mileage: "567 Km",
+                        image:
+                            "https://www.byd.com/material/byd-site/id/pricelist/sealion7-2.png",
+                        rating: 5,
+                        status: "Baru",
+                        drivetrain: "AWD",
+                        seats: 5,
+                    },
+                    {
+                        id: 5,
+                        name: "BYD Dolphin",
+                        brand: "BYD",
+                        year: 2026,
+                        price: 369000000,
+                        bodyType: "Hatchback",
+                        transmission: "Otomatis",
+                        batteryCapacity: "60.48 kWh",
+                        mileage: "490 Km",
+                        image:
+                            "https://www.byd.com/material/byd-site/id/pricelist/dolphin-fix.png",
+                        rating: 5,
+                        status: "Baru",
+                        drivetrain: "FWD",
+                        seats: 5,
+                    },
+                    {
+                        id: 6,
+                        name: "BYD Atto 3",
+                        brand: "BYD",
+                        year: 2026,
+                        price: 415000000,
+                        bodyType: "SUV",
+                        transmission: "Otomatis",
+                        batteryCapacity: "60.48 kWh",
+                        mileage: "480 Km",
+                        image:
+                            "https://www.byd.com/material/byd-site/id/pricelist/atto3-white-fix.png",
+                        rating: 4,
+                        status: "Baru",
+                        drivetrain: "FWD",
+                        seats: 5,
+                    },
+                    {
+                        id: 7,
+                        name: "BYD Seal",
+                        brand: "BYD",
+                        year: 2026,
+                        price: 639000000,
+                        bodyType: "Sedan",
+                        transmission: "Otomatis",
+                        batteryCapacity: "82.56 kWh",
+                        mileage: "650 Km",
+                        image:
+                            "https://www.byd.com/material/byd-site/id/pricelist/seal-fix.png",
+                        rating: 5,
+                        status: "Baru",
+                        drivetrain: "RWD",
+                        seats: 5,
+                    },
+                    {
+                        id: 9,
+                        name: "BYD Atto 1",
+                        brand: "BYD",
+                        year: 2026,
+                        price: 205000000,
+                        bodyType: "MPV",
+                        transmission: "Otomatis",
+                        batteryCapacity: "103 kWh",
+                        mileage: "600 Km",
+                        image:
+                            "https://www.byd.com/material/byd-site/id/pricelist/atto1.png",
+                        rating: 5,
+                        status: "Baru",
+                        drivetrain: "AWD",
+                        seats: 7,
+                    },
+                ],
+
+                filteredCars: [],
+
+                init() {
+                    this.searchCars();
+                    this.$nextTick(() => {
+                        lucide.createIcons();
+                    });
+                },
+
+                // Real-time filter engine
+                searchCars() {
+                    this.filteredCars = this.cars.filter((car) => {
+                        // Filter Berdasarkan Tab "Terbaru / Semua"
+                        if (this.currentFilterView === "rekomendasi" && car.rating < 5)
+                            return false;
+
+                        // Filter Tipe Bodi
+                        if (
+                            this.searchBodyType !== "all" &&
+                            car.bodyType !== this.searchBodyType
+                        )
+                            return false;
+
+                        // Filter Kapasitas Seats
+                        if (this.searchSeats !== "all") {
+                            if (this.searchSeats === "4-5" && car.seats > 5) return false;
+                            if (this.searchSeats === "6" && car.seats !== 6) return false;
+                            if (this.searchSeats === "7" && car.seats !== 7) return false;
+                        }
+
+                        // Filter Maksimal Harga
+                        if (this.searchPriceLimit !== "all") {
+                            const maxPrice = parseInt(this.searchPriceLimit);
+                            if (car.price > maxPrice) return false;
+                        }
+
+                        return true;
+                    });
+
+                    // Render ulang icon Lucide setelah pembaruan DOM
+                    this.$nextTick(() => {
+                        lucide.createIcons();
+                    });
+                },
+
+                // Reset filter form
+                resetFilters() {
+                    this.searchBodyType = "all";
+                    this.searchSeats = "all";
+                    this.searchPriceLimit = "all";
+                    this.currentFilterView = "semua";
+                    this.searchCars();
+                    this.addToast("Pencarian dikosongkan.");
+                },
+
+                // Format mata uang Rupiah
+                formatRupiah(value) {
+                    return "Rp " + value.toLocaleString("id-ID");
+                },
+
+                getCarById(id) {
+                    return this.cars.find((c) => c.id === id);
+                },
+
+                // Fungsi Favorit / Wishlist
+                toggleFavorite(id) {
+                    const index = this.favorites.indexOf(id);
+                    if (index > -1) {
+                        this.favorites.splice(index, 1);
+                        this.addToast("Dihapus dari daftar favorit.");
+                    } else {
+                        this.favorites.push(id);
+                        this.addToast("Ditambahkan ke daftar favorit!");
+                    }
+                },
+
+                isFavorite(id) {
+                    return this.favorites.includes(id);
+                },
+
+                // Detail Modal
+                openCarDetail(car) {
+                    this.selectedCar = car;
+                    this.isDetailModalOpen = true;
+                    this.$nextTick(() => {
+                        lucide.createIcons();
+                    });
+                },
+
+                // Toast Notification Handler
+                addToast(message) {
+                    const id = Date.now();
+                    this.toasts.push({ id, message });
+
+                    this.$nextTick(() => {
+                        lucide.createIcons();
+                    });
+
+                    setTimeout(() => {
+                        this.removeToast(id);
+                    }, 3000);
+                },
+
+                removeToast(id) {
+                    this.toasts = this.toasts.filter((t) => t.id !== id);
+                },
+
+                // Simulasi Form submit
+                submitConsultationForm() {
+                    this.addToast(
+                        `Sukses, ${this.consultName}! Tim sales BYD segera menghubungi Anda.`,
+                    );
+                    this.consultName = "";
+                    this.consultPhone = "";
+                    this.consultMessage = "";
+                },
+            };
+        }
+    </script>
+</body>
+
+</html>
